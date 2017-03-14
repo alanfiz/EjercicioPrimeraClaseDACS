@@ -5,7 +5,7 @@ import java.util.Map;
  */
 public class Mueble {
 
-    private Map atributos;
+    private Map<String,String> atributos;
 
     public Map getAtributos() {
         return atributos;
@@ -13,5 +13,20 @@ public class Mueble {
 
     public void setAtributos(Map atributos) {
         this.atributos = atributos;
+    }
+
+    //Hay que crear un map y pasarlo a constructor para crear el objeto
+    public Mueble(Map<String, String> atributos) {
+        this.atributos = atributos;
+    }
+
+    public Mueble() {
+    }
+
+    @Override
+    public String toString() {
+        return "Mueble{" +
+                "atributos=" + atributos +
+                '}';
     }
 }
