@@ -1,4 +1,6 @@
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by alan on 13-Mar-17.
@@ -58,5 +60,16 @@ public class Fabrica {
     }
 
     public Fabrica() {
+    }
+
+    public static void main(String[] args) {
+
+        //crear map
+        Map<String, String> m = new HashMap<String, String>();
+        m.put("Color","Rojo");
+        m.put("Material","Pino");
+
+        Mueble mueble = new Mueble(m);
+        System.out.println(mueble);
     }
 }
