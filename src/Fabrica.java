@@ -72,4 +72,10 @@ public class Fabrica {
         Mueble mueble = new Mueble(m);
         System.out.println(mueble);
     }
+
+    public Pedido proximoPedido (List<Pedido>, Politica) {
+        // trata la lista de pedidos de acuerdo a la politica //
+        // no tengo idea como se haria jajajaj//
+
+    }
 }
