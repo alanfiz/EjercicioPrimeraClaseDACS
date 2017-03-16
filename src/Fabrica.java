@@ -1,3 +1,4 @@
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,9 +74,40 @@ public class Fabrica {
         System.out.println(mueble);
     }
 
-    public Pedido proximoPedido (List<Pedido>, Politica) {
-        // trata la lista de pedidos de acuerdo a la politica //
-        // no tengo idea como se haria jajajaj//
+    //Falta metodo para comparar muebles.
+    //public boolean compararMueble(Pedido ped){}
 
+    public boolean compararEstado(Pedido ped){
+        if(politica.getAtributo()=="Estado" && (String)politica.getValor()==ped.getLugarEntrega()){
+            return true;
+        }else{return false;}
     }
+
+    public boolean compararLugarEntrega(Pedido ped){
+        if(politica.getAtributo()=="Lugar Entrega" && (String)politica.getValor()==ped.getLugarEntrega()){
+            return true;
+        }else{return false;}
+    }
+
+    public boolean compararFechaPedido(Pedido ped){
+        if((politica.getAtributo()=="Fecha Pedido")&&((Date)politica.getValor() == ped.getFechaPedido())){
+            return true;
+        }else{return false;}
+    }
+
+    public boolean compararFechaMaxEntrega(Pedido ped){
+        if((politica.getAtributo()=="Fecha Max Entrega")&&((Date)politica.getValor() == ped.getFechaPedido())){
+            return true;
+        }else{return false;}
+    }
+
+    /*public Pedido proxPedido(){
+        for (int i = 0; i<= pedidos.size(); i++){
+            Pedido p = new Pedido();
+            p = pedidos.get(i);
+
+        }
+    }
+    */
+    //public void atenderPedido(){}
 }
