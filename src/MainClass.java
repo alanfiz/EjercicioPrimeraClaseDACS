@@ -10,8 +10,45 @@ public class MainClass {
 
     public static void main(String[] args){
 
+        //Politica compuesta
         Politica pol1 = new PoliticaSimple("Color", "Negro");
-        Politica pol2 = new PoliticaSimple("Estado","Incompleto");//"Fecha Pedido", new Date(2017,2,19)
+        Politica pol2 = new PoliticaSimple("Lugar Entrega","Resistencia");
+        ArrayList<Politica> listpoliticas1 = new ArrayList<>();
+        listpoliticas1.add(pol1);
+        listpoliticas1.add(pol2);
+        Politica pc1 = new PoliticaCompuesta(listpoliticas1, "And");
+
+        //Lista de muebles
+        Map<String,String> att1 = new HashMap<>();
+        att1.put("Nombre","Silla");
+        att1.put("Color", "Negro");
+        att1.put("Material","Pino");
+        Map<String,String> att2 = new HashMap<>();
+        att1.put("Nombre","Mesa");
+        att1.put("Color", "Negro");
+        att1.put("Material","Roble");
+        Mueble m1 = new Mueble(att1);
+        Mueble m2 = new Mueble(att2);
+        ArrayList<Mueble> muebles1 = new ArrayList<>();
+        muebles1.add(m1);
+        muebles1.add(m2);
+
+        Pedido p1 = new Pedido(new Date(2017,2,17), new Date(2017,3,17),
+                "Resistencia", "Incompleto",muebles1);
+
+        ArrayList<Pedido> listPedidos1 = new ArrayList<>();
+        listPedidos1.add(p1);
+
+        ArrayList<Fabrica> listFabrica1 = new ArrayList<>();
+        Fabrica fabrica1 = new Fabrica("Fabrica1", listPedidos1, pc1, listFabrica1, true  );
+
+        System.out.println(fabrica1.getPedidos().size());
+        fabrica1.atenderPedido();
+        System.out.println(fabrica1.getPedidos().size());
+        System.out.println(fabrica1.getPedidos().get(0).getEstado());
+        /*
+        Politica pol1 = new PoliticaSimple("Color", "Negro");
+        Politica pol2 = new PoliticaSimple("Lugar Entrega","Barranqueras");//"Fecha Pedido", new Date(2017,2,19)
         Politica pol3 = new PoliticaSimple("Lugar Entrega","Fontana");
         Politica pol4 = new PoliticaSimple("Material", "Roble");
 
@@ -97,22 +134,26 @@ public class MainClass {
         Mueble m9 = new Mueble(att9);
         Mueble m10 = new Mueble(att10);
         Mueble m11 = new Mueble(att11);
+
         ArrayList<Mueble> muebles1 = new ArrayList<>();
         muebles1.add(m1);
         muebles1.add(m2);
         muebles1.add(m3);
+
         ArrayList<Mueble> muebles2 = new ArrayList<>();
         muebles2.add(m4);
-        muebles2.add(m5);
-        muebles2.add(m6);
+        muebles2.add(m7);
+
         ArrayList<Mueble> muebles3 = new ArrayList<>();
         muebles3.add(m7);
         muebles3.add(m8);
         muebles3.add(m9);
+
         ArrayList<Mueble> muebles4 = new ArrayList<>();
         muebles4.add(m10);
         muebles4.add(m11);
         muebles4.add(m1);
+
         ArrayList<Mueble> muebles5 = new ArrayList<>();
         muebles5.add(m2);
         muebles5.add(m4);
@@ -179,9 +220,9 @@ public class MainClass {
         listFabrica4.add(fabrica2);
         listFabrica4.add(fabrica3);
 
-        System.out.println(fabrica3.getPedidos().size());
-        fabrica3.atenderPedido();
-        System.out.println(fabrica3.getPedidos().size());
-
+        System.out.println(fabrica2.getPedidos().size());
+        fabrica2.atenderPedido();
+        System.out.println(fabrica2.getPedidos().size());
+        */
     }
 }

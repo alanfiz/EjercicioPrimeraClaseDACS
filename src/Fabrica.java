@@ -72,43 +72,44 @@ public class Fabrica {
         this.recibirPedido = recibirPedido;
     }
 
-    public boolean compararMueble(Pedido ped){
+    public boolean compararMueble(Politica pol, Pedido ped){
         Mueble m = new Mueble();
         boolean flagAttr = false;
         boolean flagMueble = false;
         for(int i=0;i<ped.getMuebles().size();i++){
-            //m = ped.getMuebles().get(i);
-            flagAttr = ped.getMuebles().get(i).getAtributos().containsKey(politica.getAtributo());
+            m = ped.getMuebles().get(i);
+            flagAttr = m.getAtributos().containsKey(pol.getAtributo());
             if(flagAttr==true){
-                if(ped.getMuebles().get(i).getAtributos().get(politica.getAtributo())==politica.getValor()){
+                if(m.getAtributos().get(pol.getAtributo())==pol.getValor()){
                     flagMueble = true;
                 }
-            }
-            if(flagMueble == false){break;}
+            }else{break;}
         }
         return flagMueble;
     }
 
-    public boolean compararEstado(Pedido ped){
-        if(politica.getAtributo()=="Estado" && (String)politica.getValor()==ped.getEstado()){
+    public boolean compararEstado(Politica pol, Pedido ped){
+        if(pol.getAtributo()=="Estado" && (String)pol.getValor()==ped.getEstado()){
             return true;
         }else{return false;}
     }
 
-    public boolean compararLugarEntrega(Pedido ped){
-        if(politica.getAtributo()=="Lugar Entrega" && (String)politica.getValor()==ped.getLugarEntrega()){
+    public boolean compararLugarEntrega(Politica pol, Pedido ped){
+        if(pol.getAtributo()=="Lugar Entrega"){
+          if((String)pol.getValor()==ped.getLugarEntrega()){
+              return true;
+          }else{return false;}
+        }else{return false;}
+    }
+
+    public boolean compararFechaPedido(Politica pol, Pedido ped){
+        if((pol.getAtributo()=="Fecha Pedido")&&((Date)pol.getValor() == ped.getFechaPedido())){
             return true;
         }else{return false;}
     }
 
-    public boolean compararFechaPedido(Pedido ped){
-        if((politica.getAtributo()=="Fecha Pedido")&&((Date)politica.getValor() == ped.getFechaPedido())){
-            return true;
-        }else{return false;}
-    }
-
-    public boolean compararFechaMaxEntrega(Pedido ped){
-        if((politica.getAtributo()=="Fecha Max Entrega")&&((Date)politica.getValor() == ped.getFechaPedido())){
+    public boolean compararFechaMaxEntrega(Politica pol, Pedido ped){
+        if((pol.getAtributo()=="Fecha Max Entrega")&&((Date)pol.getValor() == ped.getFechaPedido())){
             return true;
         }else{return false;}
     }
@@ -116,12 +117,13 @@ public class Fabrica {
     public boolean comprobarPoliticaPedido(Politica pol, Pedido ped){
         boolean flag = false;
         switch(pol.getAtributo()){
-            case "Estado" : flag = compararEstado(ped);
-            case "Lugar Entrega" : flag = compararLugarEntrega(ped);
-            case "Fecha Pedido" : flag = compararFechaPedido(ped);
-            case "Fecha Max Entrega" : flag = compararFechaMaxEntrega(ped);
-            default : flag = compararMueble(ped);
+            case "Estado" : flag = compararEstado(pol,ped);
+            case "Lugar Entrega" : flag = compararLugarEntrega(pol,ped);
+            case "Fecha Pedido" : flag = compararFechaPedido(pol,ped);
+            case "Fecha Max Entrega" : flag = compararFechaMaxEntrega(pol,ped);
+            default : flag = compararMueble(pol,ped);
         }
+        System.out.println(flag);
         return flag;
     }
 
@@ -149,12 +151,13 @@ public class Fabrica {
         if(f==true)System.out.println("Pedido Realizado");
         }
         }else{
-            Politica pol = new PoliticaSimple();
+            Politica pol;
             boolean flag = false;
             pol=politica.getListpolitica().get(0);
             p = proxPedido(pol);
             if(politica.getOperacion()=="And") {
-                for (int i = 1; i <= politica.getListpolitica().size(); i++) {
+                for (int i = 1; i < politica.getListpolitica().size(); i++) {
+                    pol = politica.getListpolitica().get(i);
                     flag = comprobarPoliticaPedido(pol, p);
                     if (flag == false) {
                         p.setEstado("Delegar");
@@ -165,12 +168,14 @@ public class Fabrica {
                     f = pedidos.remove(p);
                     if (f == true) System.out.println("Pedido Realizado");
                 }
+
             }else{
                 if(p!=null){
                     f = pedidos.remove(p);
                     if (f == true) System.out.println("Pedido Realizado");
                 }else {
-                    for (int i = 1; i <= politica.getListpolitica().size(); i++) {
+                    for (int i = 1; i < politica.getListpolitica().size(); i++) {
+                        pol=politica.getListpolitica().get(i);
                         flag = comprobarPoliticaPedido(pol, p);
                         if (flag == true) {
                             f = pedidos.remove(p);
