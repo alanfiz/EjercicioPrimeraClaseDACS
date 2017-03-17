@@ -6,6 +6,14 @@ public class PoliticaSimple extends Politica {
     private String atributo;
     private Object valor;
 
+    @Override
+    public String toString() {
+        return "PoliticaSimple{" +
+                "atributo='" + atributo + '\'' +
+                ", valor=" + valor +
+                '}';
+    }
+
     public PoliticaSimple(){
 
     }

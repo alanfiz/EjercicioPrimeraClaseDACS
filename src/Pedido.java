@@ -20,6 +20,16 @@ public class Pedido {
         this.fechaPedido = fechaPedido;
     }
 
+    public Pedido(){}
+
+    public Pedido(Date fechaPedido, Date fechaMaxEntrega, String lugarEntrega, String estado, List<Mueble> muebles) {
+        this.fechaPedido = fechaPedido;
+        this.fechaMaxEntrega = fechaMaxEntrega;
+        this.lugarEntrega = lugarEntrega;
+        this.estado = estado;
+        this.muebles = muebles;
+    }
+
     public Date getFechaMaxEntrega() {
         return fechaMaxEntrega;
     }
@@ -50,5 +60,16 @@ public class Pedido {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "fechaPedido=" + fechaPedido +
+                ", fechaMaxEntrega=" + fechaMaxEntrega +
+                ", lugarEntrega='" + lugarEntrega + '\'' +
+                ", estado='" + estado + '\'' +
+                ", muebles=" + muebles +
+                '}';
     }
 }

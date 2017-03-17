@@ -1,4 +1,3 @@
-import java.lang.ref.PhantomReference;
 import java.util.*;
 
 /**
@@ -32,10 +31,6 @@ public class Fabrica {
         pedidos.add(p);
     }
 
-    public void atenderPedido(Pedido p){
-        p.setEstado("Completado");
-    }
-
     public List<Pedido> getPedidos() {
         return pedidos;
     }
@@ -52,7 +47,6 @@ public class Fabrica {
         this.nombre = nombre;
     }
 
-
     public void setPolitica(Politica politica) {
         this.politica = politica;
     }
@@ -60,7 +54,6 @@ public class Fabrica {
     public void setFabrica(ArrayList<Fabrica> fabricas) {
         this.fabricas = fabricas;
     }
-
 
     public Politica getPolitica() {
         return politica;
@@ -70,35 +63,24 @@ public class Fabrica {
         return fabricas;
     }
 
-    public Fabrica(Pedido pedido, Politica politica, ArrayList<Fabrica> fabricas) {
+    public Fabrica(String nombre, ArrayList<Pedido> pedidos,
+                   Politica politica, ArrayList<Fabrica> fabricas, boolean recibirPedido) {
+        this.nombre = nombre;
+        this.pedidos = pedidos;
         this.politica = politica;
         this.fabricas = fabricas;
+        this.recibirPedido = recibirPedido;
     }
-
-    public Fabrica() {
-    }
-
-    public static void main(String[] args) {
-
-        Map<String, String> m = new HashMap<String, String>();
-        m.put("Color","Rojo");
-        m.put("Material","Pino");
-
-        Mueble mueble = new Mueble(m);
-        System.out.println(mueble);
-    }
-
-
 
     public boolean compararMueble(Pedido ped){
         Mueble m = new Mueble();
         boolean flagAttr = false;
         boolean flagMueble = false;
-        for(int i=0;i<=ped.getMuebles().size();i++){
-            m = ped.getMuebles().get(i);
-            flagAttr = m.getAtributos().containsKey(politica.getAtributo());
+        for(int i=0;i<ped.getMuebles().size();i++){
+            //m = ped.getMuebles().get(i);
+            flagAttr = ped.getMuebles().get(i).getAtributos().containsKey(politica.getAtributo());
             if(flagAttr==true){
-                if(m.getAtributos().get(politica.getAtributo())==politica.getValor()){
+                if(ped.getMuebles().get(i).getAtributos().get(politica.getAtributo())==politica.getValor()){
                     flagMueble = true;
                 }
             }
@@ -146,7 +128,7 @@ public class Fabrica {
     public Pedido proxPedido(Politica pol){
         boolean flag = false;
         Pedido p = new Pedido();
-        for (int i = 0; i<= pedidos.size(); i++){
+        for (int i = 0; i< pedidos.size(); i++){
             p = pedidos.get(i);
             flag = comprobarPoliticaPedido(pol,p);
             if(pol.getClass().getSimpleName()=="PoliticaSimple"){
@@ -223,4 +205,7 @@ public class Fabrica {
             if(fabricas.get(i).getRecibirPedido()==true){fabricas.get(i).getPedidos().add(p);break;}
         }
     }
+
+
 }
+

@@ -25,8 +25,9 @@ public class PoliticaCompuesta extends Politica {
         listpolitica.add(p);
     }
 
-    public PoliticaCompuesta(ArrayList<Politica> listpolitica) {
+    public PoliticaCompuesta(ArrayList<Politica> listpolitica, String operacion) {
         this.listpolitica = listpolitica;
+        this.operacion = operacion;
     }
 
     @Override
