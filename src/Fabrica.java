@@ -74,11 +74,11 @@ public class Fabrica {
         System.out.println(mueble);
     }
 
-    //Falta metodo para comparar muebles.
-    //public boolean compararMueble(Pedido ped){}
+
+    public boolean compararMueble(Pedido ped){}
 
     public boolean compararEstado(Pedido ped){
-        if(politica.getAtributo()=="Estado" && (String)politica.getValor()==ped.getLugarEntrega()){
+        if(politica.getAtributo()=="Estado" && (String)politica.getValor()==ped.getEstado()){
             return true;
         }else{return false;}
     }
@@ -101,13 +101,21 @@ public class Fabrica {
         }else{return false;}
     }
 
-    /*public Pedido proxPedido(){
+    public Pedido proxPedido(){
         for (int i = 0; i<= pedidos.size(); i++){
+            boolean flag;
             Pedido p = new Pedido();
             p = pedidos.get(i);
+            switch(politica.getAtributo()){
+                case "Estado" : flag = compararEstado(p);
+                case "Lugar Entrega" : flag = compararLugarEntrega(p);
+                case "Fecha Pedido" : flag = compararFechaPedido(p);
+                case "Fecha Max Entrega" : flag = compararFechaMaxEntrega(p);
+            }
 
+            }
         }
     }
-    */
+
     //public void atenderPedido(){}
 }
