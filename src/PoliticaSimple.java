@@ -1,5 +1,3 @@
-import java.util.Date;
-
 /**
  * Created by alan on 15-Mar-17.
  */
@@ -7,6 +5,10 @@ public class PoliticaSimple extends Politica {
 
     private String atributo;
     private Object valor;
+
+    public PoliticaSimple(){
+
+    }
 
     public PoliticaSimple(String a, Object v){
         this.atributo = a;

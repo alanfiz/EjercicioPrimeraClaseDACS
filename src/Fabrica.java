@@ -1,7 +1,5 @@
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.ref.PhantomReference;
+import java.util.*;
 
 /**
  * Created by alan on 13-Mar-17.
@@ -9,9 +7,26 @@ import java.util.Map;
 public class Fabrica {
 
     private String nombre;
-    private List<Pedido> pedidos;
+    private ArrayList<Pedido> pedidos;
     private Politica politica;
-    private Fabrica fabrica;
+    private ArrayList<Fabrica> fabricas;
+    private boolean recibirPedido;
+
+    public ArrayList<Fabrica> getFabricas() {
+        return fabricas;
+    }
+
+    public void setFabricas(ArrayList<Fabrica> fabricas) {
+        this.fabricas = fabricas;
+    }
+
+    public boolean getRecibirPedido() {
+        return recibirPedido;
+    }
+
+    public void setRecibirPedido(boolean recibirPedido) {
+        this.recibirPedido = recibirPedido;
+    }
 
     public void agregarPedido(Pedido p){
         pedidos.add(p);
@@ -25,7 +40,7 @@ public class Fabrica {
         return pedidos;
     }
 
-    public void setPedidos(List<Pedido> pedidos) {
+    public void setPedidos(ArrayList<Pedido> pedidos) {
         this.pedidos = pedidos;
     }
 
@@ -42,8 +57,8 @@ public class Fabrica {
         this.politica = politica;
     }
 
-    public void setFabrica(Fabrica fabrica) {
-        this.fabrica = fabrica;
+    public void setFabrica(ArrayList<Fabrica> fabricas) {
+        this.fabricas = fabricas;
     }
 
 
@@ -51,13 +66,13 @@ public class Fabrica {
         return politica;
     }
 
-    public Fabrica getFabrica() {
-        return fabrica;
+    public ArrayList<Fabrica> getFabrica() {
+        return fabricas;
     }
 
-    public Fabrica(Pedido pedido, Politica politica, Fabrica fabrica) {
+    public Fabrica(Pedido pedido, Politica politica, ArrayList<Fabrica> fabricas) {
         this.politica = politica;
-        this.fabrica = fabrica;
+        this.fabricas = fabricas;
     }
 
     public Fabrica() {
@@ -65,7 +80,6 @@ public class Fabrica {
 
     public static void main(String[] args) {
 
-        //crear map
         Map<String, String> m = new HashMap<String, String>();
         m.put("Color","Rojo");
         m.put("Material","Pino");
@@ -75,7 +89,23 @@ public class Fabrica {
     }
 
 
-    public boolean compararMueble(Pedido ped){}
+
+    public boolean compararMueble(Pedido ped){
+        Mueble m = new Mueble();
+        boolean flagAttr = false;
+        boolean flagMueble = false;
+        for(int i=0;i<=ped.getMuebles().size();i++){
+            m = ped.getMuebles().get(i);
+            flagAttr = m.getAtributos().containsKey(politica.getAtributo());
+            if(flagAttr==true){
+                if(m.getAtributos().get(politica.getAtributo())==politica.getValor()){
+                    flagMueble = true;
+                }
+            }
+            if(flagMueble == false){break;}
+        }
+        return flagMueble;
+    }
 
     public boolean compararEstado(Pedido ped){
         if(politica.getAtributo()=="Estado" && (String)politica.getValor()==ped.getEstado()){
@@ -101,21 +131,96 @@ public class Fabrica {
         }else{return false;}
     }
 
-    public Pedido proxPedido(){
-        for (int i = 0; i<= pedidos.size(); i++){
-            boolean flag;
-            Pedido p = new Pedido();
-            p = pedidos.get(i);
-            switch(politica.getAtributo()){
-                case "Estado" : flag = compararEstado(p);
-                case "Lugar Entrega" : flag = compararLugarEntrega(p);
-                case "Fecha Pedido" : flag = compararFechaPedido(p);
-                case "Fecha Max Entrega" : flag = compararFechaMaxEntrega(p);
-            }
+    public boolean comprobarPoliticaPedido(Politica pol, Pedido ped){
+        boolean flag = false;
+        switch(pol.getAtributo()){
+            case "Estado" : flag = compararEstado(ped);
+            case "Lugar Entrega" : flag = compararLugarEntrega(ped);
+            case "Fecha Pedido" : flag = compararFechaPedido(ped);
+            case "Fecha Max Entrega" : flag = compararFechaMaxEntrega(ped);
+            default : flag = compararMueble(ped);
+        }
+        return flag;
+    }
 
+    public Pedido proxPedido(Politica pol){
+        boolean flag = false;
+        Pedido p = new Pedido();
+        for (int i = 0; i<= pedidos.size(); i++){
+            p = pedidos.get(i);
+            flag = comprobarPoliticaPedido(pol,p);
+            if(pol.getClass().getSimpleName()=="PoliticaSimple"){
+            if(flag==false){pedidos.get(i).setEstado("Delegar");}else{
+            break;}}
+        }
+        if(flag = true){return p;}else{return null;}
+    }
+
+    public void atenderPedido(){
+        Pedido p = new Pedido();
+        boolean f = false;
+        if(politica.getClass().getSimpleName()=="PoliticaSimple"){
+        p = proxPedido(politica);
+        if(p == null){System.out.println("Pedido nulo");}
+        else{
+        f = pedidos.remove(p);
+        if(f==true)System.out.println("Pedido Realizado");
+        }
+        }else{
+            Politica pol = new PoliticaSimple();
+            boolean flag = false;
+            pol=politica.getListpolitica().get(0);
+            p = proxPedido(pol);
+            if(politica.getOperacion()=="And") {
+                for (int i = 1; i <= politica.getListpolitica().size(); i++) {
+                    flag = comprobarPoliticaPedido(pol, p);
+                    if (flag == false) {
+                        p.setEstado("Delegar");
+                        break;
+                    }
+                }
+                if (flag == true) {
+                    f = pedidos.remove(p);
+                    if (f == true) System.out.println("Pedido Realizado");
+                }
+            }else{
+                if(p!=null){
+                    f = pedidos.remove(p);
+                    if (f == true) System.out.println("Pedido Realizado");
+                }else {
+                    for (int i = 1; i <= politica.getListpolitica().size(); i++) {
+                        flag = comprobarPoliticaPedido(pol, p);
+                        if (flag == true) {
+                            f = pedidos.remove(p);
+                            if (f == true) System.out.println("Pedido Realizado");
+                            break;
+                        }
+                    }
+                    if (flag == false) {
+                        p.setEstado("Delegar");
+                    }
+                }
             }
         }
     }
 
-    //public void atenderPedido(){}
+    public void delegarPedido(){
+        for(int i = 0; i <=pedidos.size(); i++){
+            Pedido p = new Pedido();
+            p = pedidos.get(i);
+            boolean f = false;
+            if(p.getEstado() == "Delegar"){
+                delegarFabrica(p);
+                f = pedidos.remove(p);
+                if(f==true)System.out.println("Pedido Delegado");
+            }
+        }
+
+    }
+
+    public void delegarFabrica(Pedido p){
+        for(int i = 0; i<=fabricas.size(); i++){
+            if(fabricas.get(i).getRecibirPedido()==true){fabricas.get(i).getPedidos().add(p);break;}
+        }
+    }
 }
