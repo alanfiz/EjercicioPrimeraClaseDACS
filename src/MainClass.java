@@ -23,15 +23,18 @@ public class MainClass {
         att1.put("Nombre","Silla");
         att1.put("Color", "Negro");
         att1.put("Material","Pino");
+
         Map<String,String> att2 = new HashMap<>();
-        att1.put("Nombre","Mesa");
-        att1.put("Color", "Negro");
-        att1.put("Material","Roble");
+        att2.put("Nombre","Mesa");
+        att2.put("Color", "Blanco");
+        att2.put("Material","Roble");
         Mueble m1 = new Mueble(att1);
         Mueble m2 = new Mueble(att2);
+
         ArrayList<Mueble> muebles1 = new ArrayList<>();
         muebles1.add(m1);
         muebles1.add(m2);
+
 
         Pedido p1 = new Pedido(new Date(2017,2,17), new Date(2017,3,17),
                 "Resistencia", "Incompleto",muebles1);
@@ -45,7 +48,7 @@ public class MainClass {
         System.out.println(fabrica1.getPedidos().size());
         fabrica1.atenderPedido();
         System.out.println(fabrica1.getPedidos().size());
-        System.out.println(fabrica1.getPedidos().get(0).getEstado());
+//        System.out.println(fabrica1.getPedidos().get(0).getEstado());
         /*
         Politica pol1 = new PoliticaSimple("Color", "Negro");
         Politica pol2 = new PoliticaSimple("Lugar Entrega","Barranqueras");//"Fecha Pedido", new Date(2017,2,19)

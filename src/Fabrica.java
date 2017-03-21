@@ -73,18 +73,19 @@ public class Fabrica {
     }
 
     public boolean compararMueble(Politica pol, Pedido ped){
-        Mueble m = new Mueble();
-        boolean flagAttr = false;
-        boolean flagMueble = false;
+        Mueble m;
+        boolean flagAttr;
+        boolean flagMueble = true;
         for(int i=0;i<ped.getMuebles().size();i++){
             m = ped.getMuebles().get(i);
             flagAttr = m.getAtributos().containsKey(pol.getAtributo());
-            if(flagAttr==true){
+            if(flagAttr==true && flagMueble==true){
                 if(m.getAtributos().get(pol.getAtributo())==pol.getValor()){
                     flagMueble = true;
                 }
-            }else{break;}
+            }else{flagMueble=false; break;}
         }
+        System.out.println(flagMueble);
         return flagMueble;
     }
 
@@ -95,11 +96,11 @@ public class Fabrica {
     }
 
     public boolean compararLugarEntrega(Politica pol, Pedido ped){
-        if(pol.getAtributo()=="Lugar Entrega"){
-          if((String)pol.getValor()==ped.getLugarEntrega()){
-              return true;
-          }else{return false;}
-        }else{return false;}
+      if(pol.getValor()==ped.getLugarEntrega()){
+          System.out.println("flag = true");
+          return true;
+      }else{return false;}
+
     }
 
     public boolean compararFechaPedido(Politica pol, Pedido ped){
@@ -115,20 +116,19 @@ public class Fabrica {
     }
 
     public boolean comprobarPoliticaPedido(Politica pol, Pedido ped){
-        boolean flag = false;
+
         switch(pol.getAtributo()){
-            case "Estado" : flag = compararEstado(pol,ped);
-            case "Lugar Entrega" : flag = compararLugarEntrega(pol,ped);
-            case "Fecha Pedido" : flag = compararFechaPedido(pol,ped);
-            case "Fecha Max Entrega" : flag = compararFechaMaxEntrega(pol,ped);
-            default : flag = compararMueble(pol,ped);
+            case "Estado" : if(compararEstado(pol,ped)){return true;}else{return false;}
+            case "Lugar Entrega" : if(compararLugarEntrega(pol,ped)){return true;}else{return false;}
+            case "Fecha Pedido" : if(compararFechaPedido(pol,ped)){return true;}else{return false;}
+            case "Fecha Max Entrega" : if(compararFechaMaxEntrega(pol,ped)){return true;}else{return false;}
+            default : if(compararMueble(pol,ped)){return true;}else{return false;}
         }
-        System.out.println(flag);
-        return flag;
+        //System.out.println(flag);
     }
 
     public Pedido proxPedido(Politica pol){
-        boolean flag = false;
+        boolean flag;
         Pedido p = new Pedido();
         for (int i = 0; i< pedidos.size(); i++){
             p = pedidos.get(i);
@@ -141,8 +141,8 @@ public class Fabrica {
     }
 
     public void atenderPedido(){
-        Pedido p = new Pedido();
-        boolean f = false;
+        Pedido p = null;
+        boolean f;
         if(politica.getClass().getSimpleName()=="PoliticaSimple"){
         p = proxPedido(politica);
         if(p == null){System.out.println("Pedido nulo");}
@@ -151,13 +151,15 @@ public class Fabrica {
         if(f==true)System.out.println("Pedido Realizado");
         }
         }else{
-            Politica pol;
-            boolean flag = false;
-            pol=politica.getListpolitica().get(0);
-            p = proxPedido(pol);
             if(politica.getOperacion()=="And") {
-                for (int i = 1; i < politica.getListpolitica().size(); i++) {
+                Politica pol;
+                boolean flag = false;
+
+                for (int i = 0; i < politica.getListpolitica().size(); i++) {
                     pol = politica.getListpolitica().get(i);
+                    if(p == null){
+                        p = proxPedido(pol);
+                    }
                     flag = comprobarPoliticaPedido(pol, p);
                     if (flag == false) {
                         p.setEstado("Delegar");
@@ -170,6 +172,9 @@ public class Fabrica {
                 }
 
             }else{
+                Politica pol;
+                boolean flag = false;
+
                 if(p!=null){
                     f = pedidos.remove(p);
                     if (f == true) System.out.println("Pedido Realizado");
