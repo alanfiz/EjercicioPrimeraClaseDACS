@@ -79,38 +79,39 @@ public class Fabrica {
         for(int i=0;i<ped.getMuebles().size();i++){
             m = ped.getMuebles().get(i);
             flagAttr = m.getAtributos().containsKey(pol.getAtributo());
-            if(flagAttr==true && flagMueble==true){
+            if(flagAttr==true){
                 if(m.getAtributos().get(pol.getAtributo())==pol.getValor()){
+                    //System.out.println(i);
                     flagMueble = true;
                 }
-            }else{flagMueble=false; break;}
+            }else{flagMueble=false;}
         }
-        System.out.println(flagMueble);
+        //System.out.println(flagMueble);
         return flagMueble;
     }
 
     public boolean compararEstado(Politica pol, Pedido ped){
-        if(pol.getAtributo()=="Estado" && (String)pol.getValor()==ped.getEstado()){
+        if(pol.getAtributo()=="Estado" && pol.getValor()==ped.getEstado()){
             return true;
         }else{return false;}
     }
 
     public boolean compararLugarEntrega(Politica pol, Pedido ped){
       if(pol.getValor()==ped.getLugarEntrega()){
-          System.out.println("flag = true");
+          //System.out.println("flag = true");
           return true;
       }else{return false;}
 
     }
 
     public boolean compararFechaPedido(Politica pol, Pedido ped){
-        if((pol.getAtributo()=="Fecha Pedido")&&((Date)pol.getValor() == ped.getFechaPedido())){
+        if((pol.getAtributo()=="Fecha Pedido")&&(pol.getValor() == ped.getFechaPedido())){
             return true;
         }else{return false;}
     }
 
     public boolean compararFechaMaxEntrega(Politica pol, Pedido ped){
-        if((pol.getAtributo()=="Fecha Max Entrega")&&((Date)pol.getValor() == ped.getFechaPedido())){
+        if((pol.getAtributo()=="Fecha Max Entrega")&&(pol.getValor() == ped.getFechaPedido())){
             return true;
         }else{return false;}
     }
@@ -165,6 +166,7 @@ public class Fabrica {
                         p.setEstado("Delegar");
                         break;
                     }
+                    //System.out.println(i);
                 }
                 if (flag == true) {
                     f = pedidos.remove(p);
